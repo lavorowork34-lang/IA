@@ -1,0 +1,318 @@
+/* =======================================
+   1. VARIABILI E TEMA BASE (LIGHT/DARK)
+   ======================================= */
+:root {
+    /* Colori del tema Chiaro */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F7F7F9; /* Sfondo cronologia/input */
+    --text-primary: #1F1F1F;
+    --text-secondary: #6B7280;
+    --color-accent: #4A90E2; /* Celeste leggero non disturbante */
+    --bubble-user: #4A90E2;
+    --bubble-user-text: #FFFFFF;
+    --bubble-ai: #E5E5E5;
+    --bubble-ai-text: var(--text-primary);
+    --border-color: #E0E0E0;
+    --shadow-base: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Tema Scuro */
+body.dark-mode {
+    --bg-primary: #121212;
+    --bg-secondary: #1F1F1F;
+    --text-primary: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --color-accent: #1E3A8A; /* Blu scuro */
+    --bubble-user: #1E3A8A;
+    --bubble-user-text: #FFFFFF;
+    --bubble-ai: #2D2D2D;
+    --bubble-ai-text: var(--text-primary);
+    --border-color: #2D2D2D;
+    --shadow-base: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* =======================================
+   2. RESET E BASE
+   ======================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s;
+    height: 100vh;
+    display: flex;
+    overflow: hidden; /* Evita lo scroll indesiderato del body */
+}
+
+/* =======================================
+   3. STRUTTURA PRINCIPALE E REATTIVITÀ
+   ======================================= */
+
+/* Sidebar Cronologia */
+.sidebar {
+    width: 300px;
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0; /* Impedisce che si rimpicciolisca */
+}
+
+/* Contenitore Chat Principale */
+.chat-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Reattività: Su Mobile, nascondi la sidebar e mostra l'icona menu */
+@media (max-width: 768px) {
+    .sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}
+
+/* =======================================
+   4. COMPONENTI DELLA SIDEBAR
+   ======================================= */
+.new-chat-btn {
+    background-color: var(--bg-primary);
+    color: var(--color-accent);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s;
+}
+
+.new-chat-btn:hover {
+    background-color: var(--border-color);
+}
+
+.chat-history {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: var(--text-primary);
+}
+
+.chat-item:hover, .chat-item.active {
+    background-color: var(--border-color); /* o un tono più scuro/chiaro */
+}
+
+/* =======================================
+   5. HEADER E FOOTER CHAT
+   ======================================= */
+.chat-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-primary);
+    flex-shrink: 0;
+}
+
+.chat-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.chat-header .material-symbols-rounded, .header-actions .material-symbols-rounded {
+     cursor: pointer;
+     padding: 8px;
+     border-radius: 50%;
+     transition: background-color 0.2s;
+}
+
+.header-actions .material-symbols-rounded:hover {
+     background-color: var(--border-color);
+}
+
+@media (min-width: 769px) {
+    .chat-header .menu-icon {
+        display: none; /* Nascondi l'icona menu su desktop */
+    }
+}
+
+/* =======================================
+   6. MESSAGGI E BOLLE
+   ======================================= */
+.message-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px 20px 100px; /* Padding extra per l'area input */
+}
+
+.message-row {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.ai-message {
+    justify-content: flex-start;
+}
+
+.bubble {
+    max-width: 70%;
+    padding: 12px 18px;
+    border-radius: 20px;
+    line-height: 1.5;
+    box-shadow: var(--shadow-base);
+}
+
+.user-message .bubble {
+    background-color: var(--bubble-user);
+    color: var(--bubble-user-text);
+    border-bottom-right-radius: 4px;
+}
+
+.ai-message .bubble {
+    background-color: var(--bubble-ai);
+    color: var(--bubble-ai-text);
+    border-bottom-left-radius: 4px;
+}
+
+.ai-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.ai-actions .material-symbols-rounded {
+    font-size: 1.2em;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.ai-actions .material-symbols-rounded:hover {
+    color: var(--color-accent);
+}
+
+/* =======================================
+   7. FOOTER INPUT CHAT
+   ======================================= */
+.chat-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: flex-end;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05); /* Ombra in alto */
+    z-index: 50;
+}
+
+.input-area {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    border-radius: 25px;
+    padding: 8px 15px;
+    border: 1px solid var(--border-color);
+}
+
+.input-area textarea {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 5px 0;
+    background-color: transparent;
+    font-size: 1em;
+    color: var(--text-primary);
+    max-height: 150px; /* Limite per la reattività */
+}
+
+.input-area .icon-attach {
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.send-btn, .zoom-btn {
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+    border: none;
+}
+
+.zoom-btn {
+    background-color: var(--color-accent);
+}
+
+.chat-item-delete {
+    margin-left: auto;
+    color: var(--text-secondary);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.chat-item:hover .chat-item-delete {
+    opacity: 1;
+}
+
+.chat-item-delete:hover {
+    color: #EF4444;
+}
+
+/* Stato inattivo/disabilitato del bottone di invio */
+.send-btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
